@@ -1,0 +1,40 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  application:
+    name: My-picture-backend
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cqm_picture
+    username: root
+    password: Qwer5244
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+knife4j:
+  enable: true
+  openapi:
+    title: 接口文档
+    version: 1.0
+    license: Apache 2.0
+    group:
+      default:
+        group-name: 默认分组
+        api-rule: package
+        api-rule-resources:
+          - com.shanming.mypicturebackend.controller
