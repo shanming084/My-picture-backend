@@ -11,6 +11,7 @@ import com.shanming.mypicturebackend.exception.BusinessException;
 import com.shanming.mypicturebackend.exception.ErrorCode;
 import com.shanming.mypicturebackend.manager.CosManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,9 @@ public class FileController {
     @Resource
     private CosManager cosManager;
 
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
     /**
      * 测试文件上传
      * @return
@@ -39,6 +43,8 @@ public class FileController {
         String filename = multipartFile.getOriginalFilename();
         //使用格式化来创建文件存储路径
         String filepath = String.format("/test/%s", filename);
+
+        stringRedisTemplate.opsForValue().set(filepath, filename);
 
         //使用cos对象存储
         //引入cosManager
@@ -67,6 +73,7 @@ public class FileController {
                 }
             }
         }
+
     }
 
     /**

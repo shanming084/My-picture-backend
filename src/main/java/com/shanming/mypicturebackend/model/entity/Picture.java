@@ -79,6 +79,17 @@ public class Picture {
     private Integer reviewStatus;
 
     /**
+     * 缩略图Url
+     */
+    private String thumbnailUrl;
+
+    /**
+     * 空间 id
+     */
+    private Long spaceId;
+
+
+    /**
      * 审核信息
      */
     private String reviewMessage;
@@ -92,6 +103,12 @@ public class Picture {
      * 审核时间
      */
     private Date reviewTime;
+
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
 
     /**
      * 创建时间

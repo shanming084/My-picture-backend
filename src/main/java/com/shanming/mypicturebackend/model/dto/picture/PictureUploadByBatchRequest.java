@@ -20,6 +20,11 @@ public class PictureUploadByBatchRequest implements Serializable {
     private String searchText;
 
     /**
+     * 图片名称前缀
+     */
+    private String namePrefix;
+
+    /**
      * 抓取数量
      */
     private Integer searchNum;

@@ -4,9 +4,50 @@ server:
     context-path: /api
 
 spring:
+#  # 空间图片分表
+#  shardingsphere:
+#    datasource:
+#      names: cqm_picture
+#      cqm_picture:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        driver-class-name: com.mysql.cj.jdbc.Driver
+#        url: jdbc:mysql://localhost:3306/cqm_picture
+#        username: root
+#        password: Qwer5244
+#    rules:
+#      sharding:
+#        tables:
+#          picture:
+#            actual-data-nodes: cqm_picture.picture  # 动态分表
+#            table-strategy:
+#              standard:
+#                sharding-column: spaceId #根据spaceId进行分表
+#                sharding-algorithm-name: picture_sharding_algorithm  # 使用自定义分片算法
+#        sharding-algorithms:
+#          picture_sharding_algorithm:
+#            type: CLASS_BASED
+#            props:
+#              strategy: standard
+#              algorithmClassName: com.shanming.mypicturebackend.manager.sharding.PictureShardingAlgorithm
+#    props:
+#      sql-show: true #打实际执行的sql日志
+  redis:
+    database: 0
+    host: 192.168.1.8
+    port: 6379
+    connect-timeout: 5000
+    password: Qwer5244
+
+  session:
+    redis:
+      namespace: "Picture:session"
+      flush-mode: on_save
+      save-mode: always
+    timeout: 86400
   servlet:
     multipart:
       max-file-size: 10MB
+
   application:
     name: My-picture-backend
 
@@ -16,11 +57,16 @@ spring:
     username: root
     password: Qwer5244
 
+# 阿里云AI配置
+aliYunAi:
+  apiKey: sk-e1b7787bd7e646bf899ba9e901c373c9
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: false
   global-config:
+    enable-sql-runner: true
     db-config:
       logic-delete-field: isDelete
       logic-delete-value: 1

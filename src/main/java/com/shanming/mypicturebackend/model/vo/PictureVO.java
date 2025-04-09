@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,8 +16,13 @@ public class PictureVO implements Serializable {
     /**  
      * id  
      */  
-    private Long id;  
-  
+    private Long id;
+
+    /**
+     * 权限列表
+     */
+    private List<String> permissionList = new ArrayList<>();
+
     /**  
      * 图片 url  
      */  
@@ -60,7 +66,23 @@ public class PictureVO implements Serializable {
     /**  
      * 图片比例  
      */  
-    private Double picScale;  
+    private Double picScale;
+
+    /**
+     * 空间 id
+     */
+    private Long spaceId;
+
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
+
+    /**
+     * 缩略图Url
+     */
+    private String thumbnailUrl;
   
     /**  
      * 图片格式  

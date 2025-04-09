@@ -16,6 +16,7 @@ import com.shanming.mypicturebackend.constants.UserConstants;
 import com.shanming.mypicturebackend.exception.BusinessException;
 import com.shanming.mypicturebackend.exception.ErrorCode;
 import com.shanming.mypicturebackend.exception.ThrowUtils;
+import com.shanming.mypicturebackend.manager.auth.StpKit;
 import com.shanming.mypicturebackend.model.dto.user.UserQueryRequest;
 import com.shanming.mypicturebackend.model.entity.User;
 import com.shanming.mypicturebackend.model.enums.UserRoleEnum;
@@ -31,6 +32,8 @@ import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import static com.shanming.mypicturebackend.constants.UserConstants.USER_LOGIN_STATE;
 
 /**
 * @author LEG
@@ -53,12 +56,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public boolean userLogout(HttpServletRequest request) {
-        Object attribute = request.getSession().getAttribute(UserConstants.USER_LOGIN_STATE);
+        Object attribute = request.getSession().getAttribute(USER_LOGIN_STATE);
         if (attribute == null) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR,"未登录");
         }
         // 移除登录态
-        request.getSession().removeAttribute(UserConstants.USER_LOGIN_STATE);
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
         return true;
     }
 
@@ -69,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        Object attribute = request.getSession().getAttribute(UserConstants.USER_LOGIN_STATE);
+        Object attribute = request.getSession().getAttribute(USER_LOGIN_STATE);
         User loginUser = (User) attribute;
         if (loginUser == null || loginUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
@@ -171,7 +174,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或者密码错误");
         }
         //保存用户的登录态
-        request.getSession().setAttribute(UserConstants.USER_LOGIN_STATE, user);
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        // 4. 记录用户登录态到 Sa-token，便于空间鉴权时使用，注意保证该用户信息与 SpringSession 中的信息过期时间一致
+        StpKit.SPACE.login(user.getId());
+        StpKit.SPACE.getSession().set(USER_LOGIN_STATE, user);
         //返回封装的脱敏用户
         return this.getLoginUserVO(user);
     }
